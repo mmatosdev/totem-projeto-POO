@@ -1,0 +1,8 @@
+br\comtotempoo\totempoo\model\Pix.class
+br\comtotempoo\totempoo\controller\PedidoController.class
+br\comtotempoo\totempoo\model\Pedido.class
+br\comtotempoo\totempoo\service\PedidoArquivoService.class
+br\comtotempoo\totempoo\model\Cliente.class
+br\comtotempoo\totempoo\model\Dinheiro.class
+br\comtotempoo\totempoo\TotempooApplication.class
+br\comtotempoo\totempoo\model\Pagamento.class

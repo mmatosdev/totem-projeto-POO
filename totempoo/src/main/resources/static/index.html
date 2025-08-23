@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Salvar Conteúdo</title>
+</head>
+<body>
+    <h2>Persistência de Dados</h2>
+    <form id="formSalvar">
+        <label for="conteudo">Conteúdo:</label>
+        <input type="text" id="conteudo" name="conteudo" required>
+        <button type="submit">Salvar</button>
+    </form>
+
+    <p id="resposta"></p>
+
+    <script>
+        document.getElementById("formSalvar").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const conteudo = document.getElementById("conteudo").value;
+
+            fetch(`/salvar-arquivo?conteudo=${encodeURIComponent(conteudo)}`, {
+                method: 'POST'
+            })
+            .then(resp => resp.text())
+            .then(txt => {
+                document.getElementById("resposta").innerText = txt;
+                document.getElementById("conteudo").value = "";
+            })
+            .catch(err => {
+                document.getElementById("resposta").innerText = "Erro: " + err;
+            });
+        });
+    </script>
+</body>
+</html>
