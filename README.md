@@ -63,20 +63,7 @@ Antes de começar, você precisará ter algumas ferramentas instaladas:
 
 
 
-md…]()
 
-
-- Java OpenJDK 17 LTS
-- Maven
-- VSCode (opcional, mas recomendado para facilitar o desenvolvimento)
-
-### Passos para Execução
-
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/seu_usuario/totempoo.git
-   cd totempoo```
-   
 
 
    
