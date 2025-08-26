@@ -1,0 +1,57 @@
+<!-- totempoo/src/main/resources/templates/selecionar-pagamento.html -->
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Escolher Pagamento</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .payment-option {
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .payment-option:hover { background-color: #f0f0f0; }
+        .payment-option input { margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="header"><strong>Totem McDonald's</strong></div>
+    <div class="container">
+        <h2>💰 Escolha o método de pagamento</h2>
+        <!-- Ação do formulário aponta para o novo POST do controller -->
+        <form th:action="@{/confirmar-pedido}" method="post">
+            <div class="payment-option">
+                <label>
+                    <!-- O name do input radio deve ser "tipoPagamento" -->
+                    <input type="radio" name="tipoPagamento" value="DINHEIRO" required>
+                    Dinheiro
+                </label>
+            </div>
+            <div class="payment-option">
+                <label>
+                    <input type="radio" name="tipoPagamento" value="PIX">
+                    PIX
+                </label>
+            </div>
+            <div class="payment-option">
+                <label>
+                    <input type="radio" name="tipoPagamento" value="CARTAO">
+                    Cartão
+                </label>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <a class="btn" th:href="@{/resumo-pedido}">Voltar</a>
+                <input type="submit" value="Finalizar Pedido" class="btn primary-btn">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

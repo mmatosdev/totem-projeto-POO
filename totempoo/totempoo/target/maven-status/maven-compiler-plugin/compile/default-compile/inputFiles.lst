@@ -1,3 +1,15 @@
-C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\ArquivoController.java
-C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\LeitorDeArquivo.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\controller\PedidoController.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\controller\TotemController.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\model\TipoPagamento.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\model\Pagamento.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\model\Cliente.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\service\PedidoArquivoService.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\strategy\DinheiroProcessador.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\repository\ProdutoRepository.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\model\Pedido.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\model\ItemPedido.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\strategy\ProcessadorPagamentoCartao.java
 C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\TotempooApplication.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\strategy\ProcessadorPagamentoStrategy.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\model\Produto.java
+C:\Users\flavi\Downloads\totempoo\totempoo\src\main\java\br\comtotempoo\totempoo\strategy\PixProcessador.java

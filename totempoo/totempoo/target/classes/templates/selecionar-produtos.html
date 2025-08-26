@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<link rel="stylesheet" href="/style.css">
+
+    <meta charset="UTF-8">
+    <title>Selecionar Produtos</title>
+</head>
+<body>
+<h1>Selecione os Produtos</h1>
+<form th:action="@{/adicionar-itens}" method="post">
+    <table border="1">
+        <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Selecionar</th>
+        </tr>
+        <tr th:each="produto : ${produtos}">
+            <td th:text="${produto.nome}"></td>
+            <td th:text="${produto.preco}"></td>
+            <td><input type="checkbox" name="ids" th:value="${produto.id}"></td>
+        </tr>
+    </table>
+    <br>
+    <button type="submit">Avançar</button>
+</form>
+</body>
+</html>

@@ -1,3 +1,15 @@
-br\comtotempoo\totempoo\LeitorDeArquivo.class
-br\comtotempoo\totempoo\ArquivoController.class
+br\comtotempoo\totempoo\model\Pedido.class
+br\comtotempoo\totempoo\strategy\ProcessadorPagamentoStrategy.class
+br\comtotempoo\totempoo\controller\TotemController.class
+br\comtotempoo\totempoo\model\Produto.class
+br\comtotempoo\totempoo\model\Cliente.class
+br\comtotempoo\totempoo\strategy\DinheiroProcessador.class
+br\comtotempoo\totempoo\model\ItemPedido.class
+br\comtotempoo\totempoo\repository\ProdutoRepository.class
+br\comtotempoo\totempoo\controller\PedidoController.class
+br\comtotempoo\totempoo\model\TipoPagamento.class
+br\comtotempoo\totempoo\service\PedidoArquivoService.class
+br\comtotempoo\totempoo\strategy\PixProcessador.class
+br\comtotempoo\totempoo\strategy\ProcessadorPagamentoCartao.class
 br\comtotempoo\totempoo\TotempooApplication.class
+br\comtotempoo\totempoo\model\Pagamento.class
