@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    background-color: #fff8f0;
+    color: #333;
+    text-align: center;
+}
+
+header {
+    background-color: #da291c;
+    color: white;
+    padding: 20px 0;
+    font-size: 1.8em;
+    font-weight: bold;
+}
+
+h1, h2 {
+    color: #da291c;
+    margin-top: 30px;
+}
+
+.botao {
+    display: inline-block;
+    padding: 15px 30px;
+    background-color: #ffc72c;
+    color: #000;
+    font-size: 1.2em;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.botao:hover {
+    background-color: #ffdb4d;
+}
+
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+}

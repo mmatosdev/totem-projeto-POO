@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/style.css">
+
+    <meta charset="UTF-8">
+    <title>Resumo do Pedido</title>
+</head>
+<body>
+<div class="header"><strong>Totem McDonald's</strong></div>
+<div class="container">
+    <h1>Resumo do Pedido</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantidade</th>
+                <th>Preço Unit.</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Itera sobre a lista de ItemPedido -->
+            <tr th:each="item : ${itens}">
+                <td th:text="${item.produto.nome}"></td>
+                <td th:text="${item.quantidade}"></td>
+                <td th:text="${'R$ ' + #numbers.formatDecimal(item.produto.preco, 1, 2, 'POINT')}"></td>
+                <td th:text="${'R$ ' + #numbers.formatDecimal(item.subtotal, 1, 2, 'POINT')}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <h3>Total: R$ <span th:text="${#numbers.formatDecimal(total, 1, 2, 'POINT')}"></span></h3>
+    <div class="actions">
+        <!-- O botão "Continuar" agora leva para a seleção de pagamento -->
+        <a th:href="@{/selecionar-pagamento}" class="btn">Continuar para Pagamento</a>
+        <a th:href="@{/cancelar-pedido}" class="btn">Cancelar Pedido</a>
+    </div>
+</div>
+</body>
+</html>
