@@ -25,28 +25,30 @@ public class PedidoController {
         this.pedidoArquivoService = pedidoArquivoService;
     }
 
-    // Criar um novo pedido
     @PostMapping
     public ResponseEntity<Pedido> criarPedido(@RequestBody Pedido pedido) {
         Pedido novoPedido = pedidoArquivoService.criarPedido(pedido);
         return ResponseEntity.ok(novoPedido);
     }
 
-    // Listar todos os pedidos
     @GetMapping
     public ResponseEntity<List<Pedido>> listarPedidos() {
         List<Pedido> pedidos = pedidoArquivoService.listarTodos();
         return ResponseEntity.ok(pedidos);
     }
-   
-    @PutMapping("/{id}")
-public ResponseEntity<String> editarPedido(@PathVariable Long id, @RequestBody Pedido pedidoAtualizado) {
-    boolean sucesso = pedidoArquivoService.editarPedido(id, pedidoAtualizado);
-    if (sucesso) {
-        return ResponseEntity.ok("Pedido atualizado com sucesso!");
-    } else {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
-    }
-}
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> editarPedido(@PathVariable Long id, @RequestBody Pedido pedidoAtualizado) {
+        boolean sucesso = pedidoArquivoService.editarPedido(id, pedidoAtualizado);
+        if (sucesso) {
+            return ResponseEntity.ok("Pedido atualizado com sucesso!");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não encontrado.");
+        }
+    }
+
+    @GetMapping("/totem")
+    public String inicio() {
+        return "Página inicial do totem";
+    }
 }

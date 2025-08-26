@@ -1,97 +1,50 @@
 package br.comtotempoo.totempoo.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Transient;
+// Modelo que representa um pedido
+public class Pedido implements Serializable {
 
-@Entity
-public class Pedido {
+    private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private int numero;
-
-    @Embedded
-    private Cliente cliente;
-
-    @ElementCollection
-    private List<String> ingredientes;
-
-    private String bebida;
-
-    @Transient
-    private Pagamento pagamento;
-
-    private LocalDateTime dataHora;
+    private Long id; // ID único do pedido
+    private int numero; // Número sequencial do pedido
+    private LocalDateTime dataHora; // Data e hora do pedido
+    private Cliente cliente; // Cliente que fez o pedido
+    private List<ItemPedido> itens; // Lista de itens (hambúrguer, bebida, etc.)
+    private double total; // Total do pedido
+    private TipoPagamento pagamento; // Tipo de pagamento escolhido
 
     public Pedido() {
+        this.itens = new ArrayList<>();
         this.dataHora = LocalDateTime.now();
     }
 
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
+    // Getters e setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    // Adicionado para permitir setar o ID manualmente, se necessário
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public int getNumero() { return numero; }
+    public void setNumero(int numero) { this.numero = numero; }
 
-    public int getNumero() {
-        return numero;
-    }
+    public LocalDateTime getDataHora() { return dataHora; }
+    public void setDataHora(LocalDateTime dataHora) { this.dataHora = dataHora; }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 
-    public Cliente getCliente() {
-        return cliente;
-    }
+    public List<ItemPedido> getItens() { return itens; }
+    public void setItens(List<ItemPedido> itens) { this.itens = itens; }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
-    }
+    public double getTotal() { return total; }
+    public void setTotal(double total) { this.total = total; }
 
-    public List<String> getIngredientes() {
-        return ingredientes;
-    }
+    public TipoPagamento getPagamento() { return pagamento; }
+    public void setPagamento(TipoPagamento pagamento) { this.pagamento = pagamento; }
 
-    public void setIngredientes(List<String> ingredientes) {
-        this.ingredientes = ingredientes;
-    }
-
-    public String getBebida() {
-        return bebida;
-    }
-
-    public void setBebida(String bebida) {
-        this.bebida = bebida;
-    }
-
-    public Pagamento getPagamento() {
-        return pagamento;
-    }
-
-    public void setPagamento(Pagamento pagamento) {
-        this.pagamento = pagamento;
-    }
-
-    public LocalDateTime getDataHora() {
-        return dataHora;
-    }
-
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
-    }
+    // Adiciona um item à lista de itens do pedido
+    public void adicionarItem(ItemPedido item) { this.itens.add(item); }
 }

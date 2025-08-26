@@ -13,28 +13,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.comtotempoo.totempoo.model.Cliente;
+import br.comtotempoo.totempoo.model.ItemPedido;
 import br.comtotempoo.totempoo.model.Pedido;
+import br.comtotempoo.totempoo.model.Produto;
+import br.comtotempoo.totempoo.model.TipoPagamento;
+import br.comtotempoo.totempoo.repository.ProdutoRepository;
 
+/**
+ * Serviço responsável por gerenciar a persistência de pedidos em arquivo de texto.
+ * Ele funciona como um "banco de dados simples" usando o arquivo "pedidos.txt".
+ */
 @Service
 public class PedidoArquivoService {
 
     private static final Logger logger = LoggerFactory.getLogger(PedidoArquivoService.class);
 
-    // Arquivo onde os pedidos serão salvos
-    private final File arquivo = new File("pedidos.txt");
+    @Autowired
+    private ProdutoRepository produtoRepository; // Para buscar os produtos ao ler os pedidos
 
-    // Contador para o número do pedido (visível para o cliente)
-    private final AtomicInteger contador = new AtomicInteger(1);
+    private File arquivo = new File("pedidos.txt"); // Arquivo onde os pedidos serão salvos
+    private final AtomicInteger contador = new AtomicInteger(1); // Para gerar números sequenciais de pedidos
+    private long proximoId = 1; // Para gerar IDs únicos
 
-    // Contador para o ID interno (chave única do pedido)
-    private long proximoId = 1;
+    // Permite alterar o arquivo (útil para testes)
+    public void setArquivo(File arquivo) {
+        this.arquivo = arquivo;
+        this.contador.set(1);
+        this.proximoId = 1;
+    }
 
-    /**
-     * Cria um novo pedido, atribui ID e número sequenciais e salva no arquivo.
-     */
+    // Cria um pedido e já salva no arquivo
     public Pedido criarPedido(Pedido pedido) {
         pedido.setId(proximoId++);
         pedido.setNumero(contador.getAndIncrement());
@@ -43,85 +55,88 @@ public class PedidoArquivoService {
         return pedido;
     }
 
-    /**
-     * Lista todos os pedidos salvos no arquivo.
-     */
+    // Lista todos os pedidos salvos
     public List<Pedido> listarTodos() {
         return lerPedidos();
     }
 
-    /**
-     * Edita um pedido existente pelo ID.
-     * Retorna true se encontrou e atualizou, false se não encontrou.
-     */
+    // Edita um pedido pelo ID
     public boolean editarPedido(Long id, Pedido pedidoAtualizado) {
         List<Pedido> pedidos = lerPedidos();
         boolean encontrado = false;
 
-        for (int i = 0; i < pedidos.size(); i++) {
-            Pedido p = pedidos.get(i);
+        for (Pedido p : pedidos) {
             if (p.getId().equals(id)) {
-                // Atualiza os campos desejados
                 p.setCliente(pedidoAtualizado.getCliente());
-                p.setIngredientes(pedidoAtualizado.getIngredientes());
-                p.setBebida(pedidoAtualizado.getBebida());
+                p.setItens(pedidoAtualizado.getItens());
                 p.setPagamento(pedidoAtualizado.getPagamento());
-                p.setDataHora(LocalDateTime.now()); // opcional: atualizar data/hora
+                p.setTotal(pedidoAtualizado.getTotal());
+                p.setDataHora(LocalDateTime.now());
                 encontrado = true;
                 break;
             }
         }
 
         if (encontrado) {
-            salvarTodosPedidos(pedidos); // regrava o arquivo inteiro
+            salvarTodosPedidos(pedidos);
         }
 
         return encontrado;
     }
 
-    /**
-     * Salva um pedido no arquivo de texto, separando os campos por ponto e vírgula.
-     */
+    // Salva um único pedido no arquivo (adiciona no final)
     private void salvarPedido(Pedido pedido) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo, true))) {
+
+            String itensString = pedido.getItens().stream()
+                    .map(item -> item.getProduto().getId() + ":" + item.getQuantidade())
+                    .reduce((a, b) -> a + "," + b)
+                    .orElse("");
+
             String linha = pedido.getId() + ";" +
-                           pedido.getNumero() + ";" +
-                           pedido.getCliente().getNome() + ";" +
-                           pedido.getCliente().getCpf() + ";" +
-                           String.join(",", pedido.getIngredientes()) + ";" +
-                           pedido.getBebida() + ";" +
-                           pedido.getDataHora();
+                    pedido.getNumero() + ";" +
+                    pedido.getCliente().getNome() + ";" +
+                    pedido.getCliente().getCpf() + ";" +
+                    itensString + ";" +
+                    pedido.getTotal() + ";" +
+                    (pedido.getPagamento() != null ? pedido.getPagamento().name() : "") + ";" +
+                    pedido.getDataHora();
+
             writer.write(linha);
             writer.newLine();
+
         } catch (IOException e) {
-            logger.error("Erro ao salvar pedido no arquivo {}", arquivo.getAbsolutePath(), e);
+            logger.error("Erro ao salvar pedido no arquivo {}. Detalhes: {}", arquivo.getAbsolutePath(), e.getMessage(), e);
         }
     }
 
-    /**
-     * Sobrescreve o arquivo com a lista completa de pedidos.
-     */
+    // Salva toda a lista de pedidos (sobrescreve o arquivo)
     private void salvarTodosPedidos(List<Pedido> pedidos) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(arquivo, false))) {
             for (Pedido pedido : pedidos) {
+                String itensString = pedido.getItens().stream()
+                        .map(item -> item.getProduto().getId() + ":" + item.getQuantidade())
+                        .reduce((a, b) -> a + "," + b)
+                        .orElse("");
+
                 String linha = pedido.getId() + ";" +
-                               pedido.getNumero() + ";" +
-                               pedido.getCliente().getNome() + ";" +
-                               pedido.getCliente().getCpf() + ";" +
-                               String.join(",", pedido.getIngredientes()) + ";" +
-                               pedido.getBebida() + ";" +
-                               pedido.getDataHora();
+                        pedido.getNumero() + ";" +
+                        pedido.getCliente().getNome() + ";" +
+                        pedido.getCliente().getCpf() + ";" +
+                        itensString + ";" +
+                        pedido.getTotal() + ";" +
+                        (pedido.getPagamento() != null ? pedido.getPagamento().name() : "") + ";" +
+                        pedido.getDataHora();
+
                 writer.write(linha);
                 writer.newLine();
             }
         } catch (IOException e) {
-            logger.error("Erro ao salvar pedidos no arquivo {}", arquivo.getAbsolutePath(), e);
+            logger.error("Erro ao salvar todos os pedidos no arquivo {}. Detalhes: {}", arquivo.getAbsolutePath(), e.getMessage(), e);
         }
     }
 
-    /**
-     * Lê todos os pedidos do arquivo, ignorando linhas vazias ou mal formatadas.
-     */
+    // Lê todos os pedidos do arquivo e reconstrói os objetos
     private List<Pedido> lerPedidos() {
         List<Pedido> pedidos = new ArrayList<>();
 
@@ -131,42 +146,69 @@ public class PedidoArquivoService {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(arquivo))) {
             String linha;
-            while ((linha = reader.readLine()) != null) {
 
-                // Ignora linhas em branco
-                if (linha.trim().isEmpty()) {
-                    continue;
-                }
+            while ((linha = reader.readLine()) != null) {
+                if (linha.trim().isEmpty()) continue;
 
                 String[] partes = linha.split(";");
 
-                // Valida se a linha tem todos os campos esperados
-                if (partes.length < 7 || partes[0].trim().isEmpty()) {
-                    logger.warn("Linha inválida no arquivo de pedidos: {}", linha);
+                if (partes.length < 8) {
+                    logger.warn("Linha inválida no arquivo de pedidos (formato incorreto): {}", linha);
                     continue;
                 }
 
-                Pedido pedido = new Pedido();
-                pedido.setId(Long.parseLong(partes[0]));
-                pedido.setNumero(Integer.parseInt(partes[1]));
-                Cliente cliente = new Cliente(partes[2], partes[3]);
-                pedido.setCliente(cliente);
-                pedido.setIngredientes(List.of(partes[4].split(",")));
-                pedido.setBebida(partes[5]);
-                pedido.setDataHora(LocalDateTime.parse(partes[6]));
+                try {
+                    Pedido pedido = new Pedido();
+                    pedido.setId(Long.valueOf(partes[0]));
+                    pedido.setNumero(Integer.parseInt(partes[1]));
 
-                pedidos.add(pedido);
+                    Cliente cliente = new Cliente(partes[2], partes[3]);
+                    pedido.setCliente(cliente);
 
-                // Atualiza contadores para não repetir IDs/números
-                if (pedido.getId() >= proximoId) {
-                    proximoId = pedido.getId() + 1;
-                }
-                if (pedido.getNumero() >= contador.get()) {
-                    contador.set(pedido.getNumero() + 1);
+                    String itensString = partes[4];
+                    List<ItemPedido> itens = new ArrayList<>();
+                    if (!itensString.isEmpty()) {
+                        for (String itemStr : itensString.split(",")) {
+                            String[] itemParts = itemStr.split(":");
+                            if (itemParts.length == 2) {
+                                Long produtoId = Long.parseLong(itemParts[0]);
+                                int quantidade = Integer.parseInt(itemParts[1]);
+                                Produto produto = produtoRepository.findById(produtoId).orElse(null);
+                                if (produto != null) {
+                                    itens.add(new ItemPedido(produto, quantidade));
+                                } else {
+                                    logger.warn("Produto com ID {} não encontrado ao ler pedido. Item será ignorado.", produtoId);
+                                }
+                            } else {
+                                logger.warn("Formato de item inválido no arquivo de pedidos: {}", itemStr);
+                            }
+                        }
+                    }
+                    pedido.setItens(itens);
+
+                    pedido.setTotal(Double.parseDouble(partes[5]));
+
+                    if (!partes[6].isEmpty()) {
+                        pedido.setPagamento(TipoPagamento.valueOf(partes[6]));
+                    }
+
+                    pedido.setDataHora(LocalDateTime.parse(partes[7]));
+
+                    pedidos.add(pedido);
+
+                    // Atualiza contadores para novos pedidos
+                    if (pedido.getId() >= proximoId) proximoId = pedido.getId() + 1;
+                    if (pedido.getNumero() >= contador.get()) contador.set(pedido.getNumero() + 1);
+
+                } catch (NumberFormatException e) {
+                    logger.warn("Erro de formato numérico ao ler linha do pedido: {}. Detalhes: {}", linha, e.getMessage());
+                } catch (IllegalArgumentException e) {
+                    logger.warn("Erro ao converter tipo de pagamento ou data/hora na linha: {}. Detalhes: {}", linha, e.getMessage());
                 }
             }
+
         } catch (IOException e) {
-            logger.error("Erro ao ler pedidos do arquivo {}", arquivo.getAbsolutePath(), e);
+            logger.error("Erro ao ler pedidos do arquivo {}. Detalhes: {}", arquivo.getAbsolutePath(), e.getMessage(), e);
         }
 
         return pedidos;
